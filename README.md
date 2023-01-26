@@ -1,1 +1,2 @@
-# CP8210-DB-Design
+# CP8210 - Topics in Data Science
+
