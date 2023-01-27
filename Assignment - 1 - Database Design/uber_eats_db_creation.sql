@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS Customers (
     Email VARCHAR(255),
     PhoneNumber VARCHAR(255),
     Address VARCHAR(255),
-    `home_lat` DECIMAL(6,5) NOT NULL,
-    `home_long` DECIMAL(6,5) NOT NULL
+    HomeLat DECIMAL(6,5) NOT NULL,
+    HomeLong DECIMAL(6,5) NOT NULL
 );
 
 -- Restaurants Table
@@ -18,8 +18,8 @@ CREATE TABLE Restaurants (
     PhoneNumber VARCHAR(255),
     Email VARCHAR(255),
     Address VARCHAR(255),
-    `location_lat` DECIMAL(6,5) NOT NULL,
-    `location_long` DECIMAL(6,5) NOT NULL
+    LocationLat DECIMAL(6,5) NOT NULL,
+    LocationLong DECIMAL(6,5) NOT NULL
 );
 
 -- Menu Items Table
