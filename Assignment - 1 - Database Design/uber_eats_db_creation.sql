@@ -1,4 +1,4 @@
-USE ubereats;
+USE mydb;
 -- Customers Table
 CREATE TABLE IF NOT EXISTS Customers (
     CustomerID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Customers (
 );
 
 -- Restaurants Table
-CREATE TABLE Restaurants (
+CREATE TABLE IF NOT EXISTS Restaurants (
     RestaurantID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255),
     PhoneNumber VARCHAR(255),
@@ -23,7 +23,7 @@ CREATE TABLE Restaurants (
 );
 
 -- Menu Items Table
-CREATE TABLE MenuItems (
+CREATE TABLE IF NOT EXISTS MenuItems (
     ItemID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     RestaurantID INT,
     FOREIGN KEY (RestaurantID) 
@@ -34,7 +34,7 @@ CREATE TABLE MenuItems (
 );
 
 -- Driver Table
-CREATE TABLE Drivers (
+CREATE TABLE IF NOT EXISTS Drivers (
     DriverID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     FirstName VARCHAR(255),
     LastName VARCHAR(255),
@@ -44,7 +44,7 @@ CREATE TABLE Drivers (
 );
 
 -- Orders Table
-CREATE TABLE Orders (
+CREATE TABLE IF NOT EXISTS Orders (
     OrderID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     CustomerID INT NOT NULL,
     FOREIGN KEY (CustomerID) 
@@ -57,12 +57,20 @@ CREATE TABLE Orders (
         REFERENCES Drivers(DriverID),
     ItemID INT NOT NULL,
     FOREIGN KEY (ItemID) REFERENCES MenuItems(ItemID),
-    Quantity NOT NULL INT,
+    Quantity INT NOT NULL,
     OrderStatus VARCHAR(255),
     OrderDate DATE
 );
 
+CREATE VIEW Menu AS
+	SELECT MenuItems.ItemID, MenuItems.Name
+    FROM MenuItems, Restaurants WHERE
+    Restaurants.RestaurantID = MenuItems.RestaurantID;
 
+CREATE VIEW Within1KM AS
+	SELECT Restaurants.RestaurantID, RestaurantID.Name
+    FROM Restaurants, Customers WHERE
+    Restaurants.RestaurantID = MenuItems.RestaurantID;
 
 -- Delivery Table
 -- CREATE TABLE Deliveries (
