@@ -1,4 +1,4 @@
-USE mydb;
+USE ubereats;
 -- Customers Table
 CREATE TABLE IF NOT EXISTS Customers (
     CustomerID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
@@ -87,7 +87,7 @@ CREATE VIEW Within5KM AS
  
 --Functions/Procedures
 DELIMETER //
---Create Custoer Profile
+--Create Customer Profile
 CREATE PROCEDURE createCustomerProfile (IN FirstName VARCHAR(255), IN LastName VARCHAR(255), IN Email VARCHAR(255), IN PhoneNumber VARCHAR(255), IN Address VARCHAR(255) )
        BEGIN
          INSERT INTO Customers(FirstName, LastName, Email, PhoneNumber, Address)
