@@ -62,15 +62,27 @@ CREATE TABLE IF NOT EXISTS Orders (
     OrderDate DATE
 );
 
+--Views
+--View the menu for a specific restaurant
 CREATE VIEW Menu AS
 	SELECT MenuItems.ItemID, MenuItems.Name
     FROM MenuItems, Restaurants WHERE
+    Restaurants.Name = "McDonald's"
     Restaurants.RestaurantID = MenuItems.RestaurantID;
 
-CREATE VIEW Within1KM AS
-	SELECT Restaurants.RestaurantID, RestaurantID.Name
+--Use haversine distance to find restaurants within 
+--a 5 kilometer radius of the user
+CREATE VIEW Within5KM AS
+	SELECT Restaurants.RestaurantID, Restaurants.Name,
+    acos(cos(radians( 'Customers.HomeLat' ))* 
+    cos(radians( 'Restaurants.LocationLat' ))* 
+    cos(radians( 'Customers.HomeLong' ) - 
+    radians( 'Restaurants.LocationLong' ))+ 
+    sin(radians( 'Customers.HomeLat' )) * 
+    sin(radians( 'Restaurants.LocationLat' ))) as 'haversine'
     FROM Restaurants, Customers WHERE
-    Restaurants.RestaurantID = MenuItems.RestaurantID;
+    'haversine' < 5
+    ORDER BY haversine;
 
 -- Delivery Table
 -- CREATE TABLE Deliveries (
