@@ -14,10 +14,9 @@ DATASET_ID = "ahmedshahriarsakib/uber-eats-usa-restaurants-menus"
 
 # # Download data from kaggle
 styled_print(text=f"Downloading {DATASET_ID}", header=True)
-
-# kaggle.api.authenticate()
-# kaggle.api.dataset_download_files(DATASET_ID,
-#                                   path=DATASET_PATH, unzip=True)
+kaggle.api.authenticate()
+kaggle.api.dataset_download_files(DATASET_ID,
+                                  path=DATASET_PATH, unzip=True)
 
 # Extract and Clean Reastaurant Data
 styled_print(
@@ -29,7 +28,7 @@ reastaurant_data["Email"] = [random_email_gen(
 for key, value in queries.reastaurant_table_mapping.items():
     reastaurant_data[key] = reastaurants_df[value]
 reastaurant_data = pd.DataFrame.from_dict(reastaurant_data)
-print(reastaurant_data.info())
+
 
 # Extract Menu Item Data
 styled_print(
@@ -40,6 +39,13 @@ menu_item_data["ItemID"] = [i+1 for i in range(menu_item_df.shape[0])]
 for key, value in queries.menu_items_table_mapping.items():
     menu_item_data[key] = menu_item_df[value]
 menu_item_data = pd.DataFrame.from_dict(menu_item_data)
+print(menu_item_data.info())
+
+
+# Randomly sample 100000 elements from your dataframe
+styled_print(
+    text=f"Sampling 100000 elements for MenuItems Table", header=True)
+menu_item_data = menu_item_data.sample(n=100000)
 print(menu_item_data.info())
 
 
@@ -78,16 +84,13 @@ insert_data(
     cursor=cursor, connection=connection
 )
 
-
 # Query Table
 all_restaurants = fetch_data(
     query="SELECT * FROM `Restaurants`",
     cursor=cursor
 )
+
 all_menu_items = fetch_data(
     query="SELECT * FROM `MenuItems`",
     cursor=cursor
 )
-
-for i in all_restaurants:
-    print(i)

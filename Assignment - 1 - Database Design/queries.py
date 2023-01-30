@@ -1,5 +1,6 @@
 create_db_query = "CREATE DATABASE IF NOT EXISTS ubereats;"
 
+# List of Keys for Customers Table
 customer_table_keys = [
     "CustomerID",
     "FirstName",
@@ -10,6 +11,8 @@ customer_table_keys = [
     "HomeLat",
     "HomeLong"
 ]
+
+# SQL Query to Create Customers Table
 create_customer_table_query = """
     CREATE TABLE IF NOT EXISTS Customers (
         CustomerID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -18,11 +21,12 @@ create_customer_table_query = """
         Email VARCHAR(255),
         PhoneNumber VARCHAR(255),
         Address VARCHAR(255),
-        HomeLat DECIMAL(6,5) NOT NULL,
-        HomeLong DECIMAL(6,5) NOT NULL
+        HomeLat FLOAT NOT NULL,
+        HomeLong FLOAT NOT NULL
     );
 """
 
+# Mapping Keys from Restaurants Table to data.csv columns
 reastaurant_table_mapping = {
     "RestaurantID": "id",
     "Name": "name",
@@ -36,6 +40,7 @@ reastaurant_table_mapping = {
     "LocationLong": "lng"
 }
 
+# SQL Query to Create Restaurants Table
 create_reastaurant_table_query = """
     CREATE TABLE IF NOT EXISTS Restaurants (
         RestaurantID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -44,6 +49,7 @@ create_reastaurant_table_query = """
         Ratings INT,
         Category VARCHAR(512),
         PriceRange VARCHAR(255),
+        PhoneNumber VARCHAR(255),
         Email VARCHAR(255),
         Address VARCHAR(255),
         PostalCode VARCHAR(255),
@@ -52,6 +58,7 @@ create_reastaurant_table_query = """
     );
 """
 
+# Mapping Keys from MenuItems Table to data.csv columns
 menu_items_table_mapping = {
     "RestaurantID": "restaurant_id",
     "Name": "name",
@@ -59,6 +66,7 @@ menu_items_table_mapping = {
     "Price": "price"
 }
 
+# SQL Query to Create MenuItems Table
 create_menu_items_table_query = """
     CREATE TABLE IF NOT EXISTS MenuItems (
         ItemID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -71,6 +79,7 @@ create_menu_items_table_query = """
     );
 """
 
+# SQL Query to Create Drivers Table
 create_drivers_table_query = """
     CREATE TABLE IF NOT EXISTS Drivers (
         DriverID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -78,10 +87,13 @@ create_drivers_table_query = """
         LastName VARCHAR(255),
         PhoneNumber VARCHAR(255),
         Email VARCHAR(255),
-        Address VARCHAR(255)
+        Address VARCHAR(255),
+        HomeLat FLOAT NOT NULL,
+        HomeLong FLOAT NOT NULL
     );
 """
 
+# SQL Query to Create Orders Table
 create_orders_table_query = """
     CREATE TABLE IF NOT EXISTS Orders(
         OrderID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -99,6 +111,7 @@ create_orders_table_query = """
     );
 """
 
+# SQL Query to Create Deliveries Table
 create_deliveries_table_query = """
     CREATE TABLE IF NOT EXISTS Deliveries (
         DeliveryID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

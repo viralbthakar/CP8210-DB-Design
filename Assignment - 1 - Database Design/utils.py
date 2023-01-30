@@ -1,17 +1,19 @@
 import random
 import string
-from randominfo import get_first_name, get_last_name, get_email
 
 
 def random_char(char_num):
+    """Random Character Generator"""
     return ''.join(random.choice(string.ascii_lowercase) for _ in range(char_num))
 
 
 def random_email_gen(char_num=7):
+    """Random Email Generator"""
     return random_char(char_num)+"@gmail.com"
 
 
 def styled_print(text, header=False):
+    """Custom Print Function"""
     class style:
         BOLD = '\033[1m'
         UNDERLINE = '\033[4m'
@@ -24,17 +26,20 @@ def styled_print(text, header=False):
 
 
 def execute_and_commit(query, connection, cursor):
+    """Execute and Commit SQL Query"""
     cursor.execute(query)
     connection.commit()
 
 
 def fetch_data(query, cursor):
+    """Fetch Data from Table by Executing SQL Query"""
     cursor.execute(query)
     result = cursor.fetchall()
     return result
 
 
 def insert_data(data_dict, table, cursor, connection):
+    """Instert DataFrame data into Table"""
     styled_print(text=f"Populating {table}", header=True)
     # creating column list for insertion
     cols = "`,`".join([str(i) for i in data_dict.keys()])
