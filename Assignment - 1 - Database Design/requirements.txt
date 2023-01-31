@@ -1,0 +1,5 @@
+kaggle
+pandas
+numpy
+randominfo
+mysql-connector-python
