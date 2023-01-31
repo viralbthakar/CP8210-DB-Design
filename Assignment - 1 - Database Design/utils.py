@@ -4,11 +4,17 @@ import string
 import pandas as pd
 from collections import defaultdict
 from random_profile import RandomProfile
+from randomtimestamp import randomtimestamp
 
 
 def random_char(char_num):
     """Random Character Generator"""
     return ''.join(random.choice(string.ascii_lowercase) for _ in range(char_num))
+
+
+def random_string(length):
+    letters = string.ascii_letters
+    return ''.join(random.choice(letters) for i in range(length))
 
 
 def random_email_gen(char_num=7):
@@ -33,7 +39,6 @@ def dms2dec(dms_str):
 def create_customers(num_customers, driver=False):
     rp = RandomProfile()
     profiles = rp.full_profiles(num=num_customers)
-
     customers = defaultdict(list)
     for i, profile in enumerate(profiles):
         if driver:
@@ -46,13 +51,38 @@ def create_customers(num_customers, driver=False):
         customers["PhoneNumber"].append(profile["phone_number"])
         customers["Address"].append(
             ' '.join([str(val) for val in profile["address"].values()]))
-
         lat_dms = re.sub(r'\s', '', profile["coordinates"])[:16]
         lng_dms = re.sub(r'\s', '', profile["coordinates"])[16:]
-
         customers["HomeLat"].append(dms2dec(lat_dms))
         customers["HomeLong"].append(dms2dec(lng_dms))
     return pd.DataFrame.from_dict(customers)
+
+
+def create_orders(num_orders, cust_ids, rest_ids, item_ids):
+    order_data = defaultdict(list)
+    for i in range(num_orders):
+        order_data["OrderID"].append(i+1)
+        order_data["CustomerID"].append(random.sample(cust_ids, 1)[0])
+        order_data["RestaurantID"].append(random.sample(rest_ids, 1)[0])
+        order_data["ItemID"].append(random.sample(item_ids, 1)[0])
+        order_data["Quantity"].append(
+            random.sample([item for item in range(1, 10)], 1)[0])
+        order_data["OrderStatus"].append(random.sample([0, 1], 1)[0])
+        order_data["OrderDate"].append(randomtimestamp(
+            2015, None, pattern="%Y-%m-%d %H:%M:%S", text=True))
+    return pd.DataFrame.from_dict(order_data)
+
+
+def create_deliveries(num_deliveries, order_ids, driver_ids):
+    delivery_data = defaultdict(list)
+    for i in range(num_deliveries):
+        delivery_data["DeliveryID"].append(i+1)
+        delivery_data["OrderID"].append(random.sample(order_ids, 1)[0])
+        delivery_data["DriverID"].append(random.sample(driver_ids, 1)[0])
+        delivery_data["DeliveryStatus"].append(random.sample([0, 1], 1)[0])
+        delivery_data["DeliveryDate"].append(randomtimestamp(
+            2015, None, pattern="%Y-%m-%d %H:%M:%S", text=True))
+    return pd.DataFrame.from_dict(delivery_data)
 
 
 def styled_print(text, header=False):

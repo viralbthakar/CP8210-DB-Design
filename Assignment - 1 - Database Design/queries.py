@@ -106,8 +106,8 @@ create_orders_table_query = """
         ItemID INT NOT NULL,
         FOREIGN KEY(ItemID) REFERENCES MenuItems(ItemID),
         Quantity INT NOT NULL,
-        OrderStatus VARCHAR(255),
-        OrderDate DATE
+        OrderStatus BIT(1),
+        OrderDate DATETIME
     );
 """
 
@@ -121,7 +121,7 @@ create_deliveries_table_query = """
         DriverID INT NOT NULL,
         FOREIGN KEY (DriverID) 
             REFERENCES Drivers(DriverID),
-        DeliveryStatus VARCHAR(255),
+        DeliveryStatus BIT(1),
         DeliveryDate DATE
     );
 """
