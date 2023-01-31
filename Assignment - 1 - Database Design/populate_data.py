@@ -5,20 +5,32 @@ from getpass import getpass
 from mysql.connector import connect, Error
 
 import queries
-from utils import execute_and_commit, random_email_gen, insert_data, styled_print, fetch_data
+from utils import execute_and_commit, random_email_gen, insert_data, styled_print, fetch_data, create_customers
 
 
 # Static Variables
 DATASET_PATH = "./data/"
 DATASET_ID = "ahmedshahriarsakib/uber-eats-usa-restaurants-menus"
+NUM_CUSTMERS = 10000
+NUM_DRIVERS = 1000
 
-# # Download data from kaggle
+
+# Download data from kaggle
 styled_print(text=f"Downloading {DATASET_ID}", header=True)
 kaggle.api.authenticate()
 kaggle.api.dataset_download_files(DATASET_ID,
                                   path=DATASET_PATH, unzip=True)
 
-# Extract and Clean Reastaurant Data
+
+# Create Random Customers to Populate Customers Table
+customer_data = create_customers(NUM_CUSTMERS)
+
+
+# Create Random Customers to Populate Customers Table
+driver_data = create_customers(NUM_DRIVERS, driver=True)
+
+
+# Extract and Clean Reastaurant Data to Populate Restaurants Table
 styled_print(
     text=f"Extracting and Cleaning Data for Restaurants Table", header=True)
 reastaurant_data = {}
@@ -28,9 +40,10 @@ reastaurant_data["Email"] = [random_email_gen(
 for key, value in queries.reastaurant_table_mapping.items():
     reastaurant_data[key] = reastaurants_df[value]
 reastaurant_data = pd.DataFrame.from_dict(reastaurant_data)
+print(reastaurant_data.info())
 
 
-# Extract Menu Item Data
+# Extract Menu Item Data to Populate MenuItems Table
 styled_print(
     text=f"Extracting and Cleaning Data for MenuItems Table", header=True)
 menu_item_data = {}
@@ -73,10 +86,24 @@ execute_and_commit(queries.create_drivers_table_query, connection, cursor)
 execute_and_commit(queries.create_orders_table_query, connection, cursor)
 execute_and_commit(queries.create_deliveries_table_query, connection, cursor)
 
+
+# Populate the Customers Table
+insert_data(
+    data_dict=customer_data, table="Customers",
+    cursor=cursor, connection=connection)
+
+
+# Populate the Driver Table
+insert_data(
+    data_dict=driver_data, table="Drivers",
+    cursor=cursor, connection=connection)
+
+
 # Populate the Restaurants Table
 insert_data(
     data_dict=reastaurant_data, table="Restaurants",
     cursor=cursor, connection=connection)
+
 
 # Populate the MenuItems Table
 insert_data(
@@ -84,13 +111,14 @@ insert_data(
     cursor=cursor, connection=connection
 )
 
-# Query Table
-all_restaurants = fetch_data(
-    query="SELECT * FROM `Restaurants`",
-    cursor=cursor
-)
 
-all_menu_items = fetch_data(
-    query="SELECT * FROM `MenuItems`",
-    cursor=cursor
-)
+# # Query Table
+# all_restaurants = fetch_data(
+#     query="SELECT * FROM `Restaurants`",
+#     cursor=cursor
+# )
+
+# all_menu_items = fetch_data(
+#     query="SELECT * FROM `MenuItems`",
+#     cursor=cursor
+# )
