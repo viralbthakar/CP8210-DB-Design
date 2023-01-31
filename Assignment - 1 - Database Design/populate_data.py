@@ -5,7 +5,7 @@ from getpass import getpass
 from mysql.connector import connect, Error
 
 import queries
-from utils import execute_and_commit, random_email_gen, insert_data, styled_print, fetch_data, create_customers
+from utils import execute_and_commit, random_email_gen, insert_data, styled_print, fetch_data, create_customers, create_orders, create_deliveries
 
 
 # Static Variables
@@ -13,6 +13,8 @@ DATASET_PATH = "./data/"
 DATASET_ID = "ahmedshahriarsakib/uber-eats-usa-restaurants-menus"
 NUM_CUSTMERS = 10000
 NUM_DRIVERS = 1000
+NUM_ORDERS = 10000
+NUM_DELIVERY = 10000
 
 
 # Download data from kaggle
@@ -23,12 +25,14 @@ kaggle.api.dataset_download_files(DATASET_ID,
 
 
 # Create Random Customers to Populate Customers Table
+styled_print(text=f"Creating {NUM_CUSTMERS} Customer Profiles", header=True)
 customer_data = create_customers(NUM_CUSTMERS)
-
+print(customer_data.info())
 
 # Create Random Customers to Populate Customers Table
+styled_print(text=f"Creating {NUM_CUSTMERS} Driver Profiles", header=True)
 driver_data = create_customers(NUM_DRIVERS, driver=True)
-
+print(driver_data.info())
 
 # Extract and Clean Reastaurant Data to Populate Restaurants Table
 styled_print(
@@ -61,6 +65,22 @@ styled_print(
 menu_item_data = menu_item_data.sample(n=100000)
 print(menu_item_data.info())
 
+# Create Random Orders to Populate Orders Table
+styled_print(text=f"Creating {NUM_ORDERS} Orders", header=True)
+order_data = create_orders(
+    num_orders=NUM_ORDERS,
+    cust_ids=list(customer_data["CustomerID"]),
+    rest_ids=list(reastaurant_data["RestaurantID"]),
+    item_ids=list(menu_item_data["ItemID"]))
+print(order_data.info())
+
+# Create Random Deliveries to Populate Deliveries Table
+styled_print(text=f"Creating {NUM_DELIVERY} Deliveries", header=True)
+delivery_data = create_deliveries(
+    num_deliveries=NUM_DELIVERY,
+    order_ids=list(order_data["OrderID"]),
+    driver_ids=list(driver_data["DriverID"]))
+print(delivery_data.info())
 
 # Connect to Database
 styled_print(
@@ -111,14 +131,14 @@ insert_data(
     cursor=cursor, connection=connection
 )
 
+# Populate the Orders Table
+insert_data(
+    data_dict=order_data, table="Orders",
+    cursor=cursor, connection=connection
+)
 
-# # Query Table
-# all_restaurants = fetch_data(
-#     query="SELECT * FROM `Restaurants`",
-#     cursor=cursor
-# )
-
-# all_menu_items = fetch_data(
-#     query="SELECT * FROM `MenuItems`",
-#     cursor=cursor
-# )
+# Populate the MenuItems Table
+insert_data(
+    data_dict=delivery_data, table="Deliveries",
+    cursor=cursor, connection=connection
+)
