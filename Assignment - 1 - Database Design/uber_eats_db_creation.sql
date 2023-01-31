@@ -84,22 +84,21 @@ CREATE TABLE Deliveries (
 CREATE VIEW Menu AS
 	SELECT MenuItems.ItemID, MenuItems.Name
     FROM MenuItems, Restaurants WHERE
-    Restaurants.Name = "McDonald's"
-    Restaurants.RestaurantID = MenuItems.RestaurantID;
+    Restaurants.Name = "Chipotle Mexican Grill (1821 Cherokee Ave SW)";
 
 --Use haversine distance to find restaurants within 
 --a 5 kilometer radius of the user
-CREATE VIEW Within5KM AS
-	SELECT Restaurants.RestaurantID, Restaurants.Name,
-    acos(cos(radians( Customers.HomeLat ))* 
-    cos(radians( Restaurants.LocationLat ))* 
-    cos(radians( Customers.HomeLong ) - 
-    radians( Restaurants.LocationLong ))+ 
-    sin(radians( Customers.HomeLat )) * 
-    sin(radians( Restaurants.LocationLat ))) as haversine
-    FROM Restaurants, Customers WHERE
-    haversine < 5
-    ORDER BY haversine;
+CREATE VIEW Within50km AS
+SELECT Restaurants.RestaurantID, Restaurants.Name,
+       ( 6371 * acos( cos( radians(Customers.HomeLat) ) * 
+                      cos( radians( Restaurants.LocationLat ) ) * 
+                      cos( radians( Restaurants.LocationLong ) - 
+                           radians(Customers.HomeLong) ) + 
+                      sin( radians(Customers.HomeLat) ) * 
+                      sin( radians( Restaurants.LocationLat ) ) ) ) AS distance 
+FROM Restaurants, Customers 
+HAVING distance < 50 
+ORDER BY distance;
 
  
 --Functions/Procedures
