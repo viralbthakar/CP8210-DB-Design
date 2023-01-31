@@ -22,7 +22,6 @@ def dms2dec(dms_str):
     dms_str = re.sub(r'\s', '', dms_str)
     sign = -1 if re.search('[swSW]', dms_str) else 1
     numbers = [*filter(len, re.split('\D+', dms_str, maxsplit=4))]
-    print(numbers)
     degree = numbers[0]
     minute = numbers[1] if len(numbers) >= 2 else '0'
     second = numbers[2] if len(numbers) >= 3 else '0'
@@ -38,9 +37,9 @@ def create_customers(num_customers, driver=False):
     customers = defaultdict(list)
     for i, profile in enumerate(profiles):
         if driver:
-            customers["DriverID"].append(i)
+            customers["DriverID"].append(i+1)
         else:
-            customers["CustomerID"].append(i)
+            customers["CustomerID"].append(i+1)
         customers["FirstName"].append(profile["first_name"])
         customers["LastName"].append(profile["last_name"])
         customers["Email"].append(profile["email"])
