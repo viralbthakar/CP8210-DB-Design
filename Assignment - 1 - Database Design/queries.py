@@ -122,6 +122,6 @@ create_deliveries_table_query = """
         FOREIGN KEY (DriverID) 
             REFERENCES Drivers(DriverID),
         DeliveryStatus BIT(1),
-        DeliveryDate DATE
+        DeliveryDate DATETIME
     );
 """

@@ -15,7 +15,7 @@ NUM_CUSTMERS = 10000
 NUM_DRIVERS = 1000
 NUM_ORDERS = 10000
 NUM_DELIVERY = 10000
-
+NUM_MENUITEMS = 100000
 
 # Download data from kaggle
 styled_print(text=f"Downloading {DATASET_ID}", header=True)
@@ -61,8 +61,8 @@ print(menu_item_data.info())
 
 # Randomly sample 100000 elements from your dataframe
 styled_print(
-    text=f"Sampling 100000 elements for MenuItems Table", header=True)
-menu_item_data = menu_item_data.sample(n=100000)
+    text=f"Sampling {NUM_MENUITEMS} elements for MenuItems Table", header=True)
+menu_item_data = menu_item_data.sample(n=NUM_MENUITEMS)
 print(menu_item_data.info())
 
 # Create Random Orders to Populate Orders Table
