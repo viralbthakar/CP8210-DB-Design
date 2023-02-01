@@ -80,7 +80,7 @@ else:
     """
     execute_and_commit(query, connection, cursor)
 df = fetch_data(
-    f"""SELECT * FROM {database_name}.{view_name};""", cursor, size={rows_to_print}, as_df=True)
+    f"""SELECT * FROM {database_name}.{view_name};""", cursor, size=50, as_df=True)
 print(df.head(rows_to_print))
 
 

@@ -42,3 +42,9 @@ There are two options to create table.
     - Execute `python populate_data.py`
 2. Using SQL Script
     - Execute commands from `uber_eats_db_creation.sql`
+
+## Run Test Queries
+To execute all the test queries mentioned in our report execute
+```
+python test_queries.py
+```
