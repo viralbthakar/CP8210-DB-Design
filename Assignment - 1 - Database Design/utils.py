@@ -104,11 +104,20 @@ def execute_and_commit(query, connection, cursor):
     connection.commit()
 
 
-def fetch_data(query, cursor):
+def fetch_data(query, cursor, size=None, as_df=False):
     """Fetch Data from Table by Executing SQL Query"""
     cursor.execute(query)
-    result = cursor.fetchall()
-    return result
+    if size is not None:
+        results = cursor.fetchmany(size)
+    else:
+        results = cursor.fetchall()
+
+    if as_df:
+        results = pd.DataFrame(results)
+        results.columns = cursor.column_names
+        return results
+    else:
+        return results
 
 
 def insert_data(data_dict, table, cursor, connection):
